@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sign In</title>
+</head>
+<body>
+    <h1>Test Sign In</h1>
+    <form id="signinForm">
+        <input type="email" id="email" value="test@example.com" placeholder="Email"><br>
+        <input type="password" id="password" value="password123" placeholder="Password"><br>
+        <button type="submit">Sign In</button>
+    </form>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('signinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const result = document.getElementById('result');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            result.innerHTML = 'Signing in...';
+            
+            try {
+                // First test manual auth
+                const testResponse = await fetch('/api/test/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const testData = await testResponse.json();
+                console.log('Manual auth test:', testData);
+                
+                // Now try NextAuth signIn
+                const authResponse = await fetch('/api/auth/callback/credentials', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const authData = await authResponse.text();
+                console.log('NextAuth response:', authData);
+                
+                result.innerHTML = '<pre>' + JSON.stringify({ test: testData, auth: authData }, null, 2) + '</pre>';
+            } catch (error) {
+                result.innerHTML = 'Error: ' + error.message;
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

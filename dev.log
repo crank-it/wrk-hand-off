@@ -1,0 +1,124 @@
+
+> wrk-platform@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3001
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1321ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.6s (565 modules)
+ HEAD / 200 in 2708ms
+ GET / 200 in 35ms
+ ✓ Compiled /middleware in 284ms (193 modules)
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 520ms (734 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard?_rsc=1sltx 200 in 37ms
+ ✓ Compiled /dashboard/projects in 104ms (722 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/projects?_rsc=sv4ac 200 in 29ms
+ ✓ Compiled /dashboard/projects/new in 107ms (728 modules)
+ ✓ Compiled /api/dashboard/projects in 89ms (475 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+Error creating project: PrismaClientKnownRequestError: 
+Invalid `prisma.project.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+    at $n.handleRequestError (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:7315)
+    at $n.handleAndLogRequestError (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async POST (webpack-internal:///(rsc)/./app/api/dashboard/projects/route.ts:95:25)
+    at async /Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:55038
+    at async ek.execute (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:45808)
+    at async ek.handle (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:56292)
+    at async doRender (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1377:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1599:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1507:28)
+    at async DevServer.renderPageComponent (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1931:24)
+    at async DevServer.renderToResponseImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1969:32)
+    at async DevServer.pipeImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:920:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:816:17)
+    at async /Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:174:21)
+    at async handleRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:353:24)
+    at async requestHandlerImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:377:13)
+    at async Server.requestListener (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Project', field_name: 'foreign key' }
+}
+ POST /api/dashboard/projects 500 in 138ms
+ ✓ Compiled /dashboard/tasks in 451ms (827 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/tasks?_rsc=1lgw5 200 in 18ms
+ GET /api/dashboard/projects 200 in 17ms
+ ✓ Compiled /dashboard/team in 119ms (834 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/team?_rsc=cez9d 200 in 13ms
+ ✓ Compiled /dashboard/messages in 126ms (836 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/messages?_rsc=lpfwc 200 in 17ms
+ ✓ Compiled /dashboard/requests in 159ms (845 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/requests?_rsc=rq801 200 in 15ms
+ GET /dashboard/tasks?_rsc=1lqye 200 in 22ms
+ GET /api/dashboard/projects 200 in 13ms
+ ✓ Compiled /dashboard/projects in 69ms (534 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard/projects?_rsc=1x8gm 200 in 97ms
+Error creating project: PrismaClientKnownRequestError: 
+Invalid `prisma.project.create()` invocation:
+
+
+Foreign key constraint violated: `foreign key`
+    at $n.handleRequestError (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:7315)
+    at $n.handleAndLogRequestError (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:6623)
+    at $n.request (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:121:6307)
+    at async l (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/@prisma/client/runtime/library.js:130:9633)
+    at async POST (webpack-internal:///(rsc)/./app/api/dashboard/projects/route.ts:95:25)
+    at async /Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:55038
+    at async ek.execute (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:45808)
+    at async ek.handle (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:56292)
+    at async doRender (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1377:42)
+    at async cacheEntry.responseCache.get.routeKind (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1599:28)
+    at async DevServer.renderToResponseWithComponentsImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1507:28)
+    at async DevServer.renderPageComponent (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1931:24)
+    at async DevServer.renderToResponseImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:1969:32)
+    at async DevServer.pipeImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:920:25)
+    at async NextNodeServer.handleCatchallRenderRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/next-server.js:272:17)
+    at async DevServer.handleRequestImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/base-server.js:816:17)
+    at async /Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/dev/next-dev-server.js:339:20
+    at async Span.traceAsyncFn (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/trace/trace.js:154:20)
+    at async DevServer.handleRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/dev/next-dev-server.js:336:24)
+    at async invokeRender (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:174:21)
+    at async handleRequest (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:353:24)
+    at async requestHandlerImpl (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/router-server.js:377:13)
+    at async Server.requestListener (/Users/ben/Documents/GitHub/wrk-NEXTJS/node_modules/next/dist/server/lib/start-server.js:141:13) {
+  code: 'P2003',
+  clientVersion: '5.22.0',
+  meta: { modelName: 'Project', field_name: 'foreign key' }
+}
+ POST /api/dashboard/projects 500 in 24ms
+ ✓ Compiled /dashboard in 65ms (536 modules)
+ ✓ Compiled /services in 257ms (852 modules)
+[33m[auth][warn][debug-enabled][0m Read more: https://warnings.authjs.dev
+ GET /dashboard?_rsc=1j04u 200 in 35ms
+ ✓ Compiled in 662ms (325 modules)
+ ✓ Compiled in 134ms (325 modules)
+ ✓ Compiled in 259ms (325 modules)
+ ✓ Compiled in 123ms (325 modules)
+ ✓ Compiled in 118ms (325 modules)
+ ✓ Compiled in 406ms (851 modules)
+ ✓ Compiled in 289ms (851 modules)
+ ✓ Compiled in 125ms (325 modules)
+ ✓ Compiled in 156ms (325 modules)
+ ✓ Compiled in 425ms (851 modules)

@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Philippines-inspired color palette */
+    --color-primary: 239 68 68; /* Red from flag */
+    --color-secondary: 251 146 60; /* Warm orange */
+    --color-accent: 250 204 21; /* Yellow from flag */
+    --color-ocean: 14 165 233; /* Ocean blue */
+    --color-tropical: 34 197 94; /* Tropical green */
+    
+    /* Neutrals */
+    --color-gray-50: 249 250 251;
+    --color-gray-100: 243 244 246;
+    --color-gray-200: 229 231 235;
+    --color-gray-300: 209 213 219;
+    --color-gray-400: 156 163 175;
+    --color-gray-500: 107 114 128;
+    --color-gray-600: 75 85 99;
+    --color-gray-700: 55 65 81;
+    --color-gray-800: 31 41 55;
+    --color-gray-900: 17 24 39;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow;
+  }
+
+  .card-hover {
+    @apply hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-orange-500 to-red-500 text-white hover:shadow-lg px-6 py-3;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 px-6 py-3;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-gray-100 px-4 py-2;
+  }
+
+  /* Forms */
+  .input {
+    @apply flex h-12 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .label {
+    @apply text-sm font-medium text-gray-700 mb-2 block;
+  }
+
+  /* Gradients */
+  .gradient-primary {
+    @apply bg-gradient-to-r from-orange-500 to-red-500;
+  }
+
+  .gradient-secondary {
+    @apply bg-gradient-to-r from-blue-500 to-cyan-500;
+  }
+
+  .gradient-tropical {
+    @apply bg-gradient-to-r from-green-400 to-emerald-500;
+  }
+
+  .gradient-warm {
+    @apply bg-gradient-to-br from-orange-400 via-red-500 to-pink-500;
+  }
+
+  /* Text Gradients */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r;
+  }
+
+  .text-gradient-primary {
+    @apply text-gradient from-orange-500 to-red-500;
+  }
+
+  /* Sections */
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  .section-header {
+    @apply text-center mb-12 md:mb-16;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  /* Service Cards */
+  .service-card {
+    @apply relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 hover:border-orange-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  .service-icon {
+    @apply w-14 h-14 rounded-lg bg-gradient-to-br from-orange-100 to-red-100 p-3 mb-4 transition-transform;
+  }
+  
+  .service-card:hover .service-icon {
+    @apply scale-110;
+  }
+
+  /* Team Cards */
+  .team-card {
+    @apply relative overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl transition-all duration-300;
+  }
+
+  /* Testimonial Cards */
+  .testimonial-card {
+    @apply relative rounded-2xl bg-gradient-to-br from-gray-50 to-white p-8 border border-gray-100;
+  }
+
+  /* Feature Lists */
+  .feature-list {
+    @apply space-y-4;
+  }
+
+  .feature-item {
+    @apply flex items-start space-x-3;
+  }
+
+  .feature-icon {
+    @apply w-6 h-6 text-green-500 flex-shrink-0 mt-0.5;
+  }
+
+  /* Pricing Cards */
+  .pricing-card {
+    @apply relative rounded-2xl border-2 p-8 transition-all duration-300;
+  }
+
+  .pricing-card-standard {
+    @apply border-gray-200 hover:border-orange-200 hover:shadow-xl;
+  }
+
+  .pricing-card-featured {
+    @apply border-orange-500 shadow-xl scale-105 bg-gradient-to-br from-orange-50 to-white;
+  }
+
+  /* Stats */
+  .stat-card {
+    @apply text-center p-6;
+  }
+
+  .stat-number {
+    @apply text-4xl md:text-5xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent;
+  }
+
+  .stat-label {
+    @apply text-gray-600 mt-2;
+  }
+
+  /* Process Steps */
+  .process-step {
+    @apply relative p-6 rounded-xl border border-gray-200 hover:border-orange-200 hover:shadow-lg transition-all;
+  }
+
+  .process-number {
+    @apply absolute -top-3 -left-3 w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white flex items-center justify-center font-bold;
+  }
+
+  /* CTA Sections */
+  .cta-section {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 p-12 md:p-20 text-white;
+  }
+
+  .cta-pattern {
+    @apply absolute inset-0 opacity-10;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  /* Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+
+  /* Backdrop Filters */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(20px);
+  }
+
+  /* Text Balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+}

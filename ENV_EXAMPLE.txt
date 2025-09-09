@@ -1,0 +1,12 @@
+# Local development
+DATABASE_URL="file:./prisma/dev.db"
+NEXTAUTH_SECRET="change-me"
+NEXTAUTH_URL="http://localhost:3000"
+
+# Optional integrations
+STRIPE_SECRET_KEY="sk_live_or_test"
+S3_BUCKET="your-bucket-name"
+
+# For Vercel (Production)
+# Set PRISMA_SCHEMA to use Postgres schema on Vercel
+# PRISMA_SCHEMA=prisma/schema.postgres.prisma
