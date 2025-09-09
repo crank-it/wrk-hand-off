@@ -88,7 +88,7 @@ export async function POST(request: Request) {
     await prisma.activityLog.create({
       data: {
         action: 'SERVICE_REQUEST_CREATED',
-        entityType: 'ServiceRequest',
+        entity: 'ServiceRequest',
         entityId: serviceRequest.id,
         userId,
         metadata: JSON.stringify({

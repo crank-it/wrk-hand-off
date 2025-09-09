@@ -353,7 +353,7 @@ function DroppableColumn({
       <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
         <div className="space-y-3 min-h-[200px]">
           {tasks.map((task) => (
-            <SortableTaskCard key={task.id} task={task} onTaskClick={handleTaskClick} />
+            <SortableTaskCard key={task.id} task={task} onTaskClick={onTaskClick} />
           ))}
           {tasks.length === 0 && (
             <p className="text-sm text-gray-500 text-center py-8">Drop tasks here</p>

@@ -3,6 +3,7 @@
   "middleware": {
     "/": {
       "files": [
+        "prerender-manifest.js",
         "server/edge-runtime-webpack.js",
         "server/middleware.js"
       ],
@@ -10,13 +11,37 @@
       "page": "/",
       "matchers": [
         {
-          "regexp": "^/.*$",
-          "originalSource": "/:path*"
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/dashboard(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/dashboard/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/projects(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/projects/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/settings(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/settings/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/billing(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(.json)?[\\/#\\?]?$",
+          "originalSource": "/billing/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/signin(.json)?[\\/#\\?]?$",
+          "originalSource": "/signin"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/signup(.json)?[\\/#\\?]?$",
+          "originalSource": "/signup"
         }
       ],
       "wasm": [],
       "assets": [],
-      "environments": {}
+      "environments": {
+        "previewModeId": "8975875412f3c18c74eb176a7b4eeae1",
+        "previewModeSigningKey": "f78c932a85a64265f1c75f51f6fd8f34765494c2d85a489fc2885cf4b5854133",
+        "previewModeEncryptionKey": "1c0865cb982448299352065f50745ef9b502923510ce313faaf578a7b311c910"
+      }
     }
   },
   "functions": {},

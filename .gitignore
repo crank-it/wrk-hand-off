@@ -1,1 +1,21 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Environment files
+.env.local
+.env
+.env*.local
+
+# Database
+*.db
+*.db-journal
+
+# Build outputs
+.next/
+out/
+
+# Vercel
+.vercel
+
+# Development
+dev.log

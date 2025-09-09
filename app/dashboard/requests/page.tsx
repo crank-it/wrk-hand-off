@@ -17,7 +17,8 @@ export default async function RequestsPage() {
     where: { userId },
     include: {
       service: true,
-      project: true
+      project: true,
+      user: true
     },
     orderBy: { createdAt: 'desc' }
   })
@@ -27,5 +28,5 @@ export default async function RequestsPage() {
     orderBy: { name: 'asc' }
   })
 
-  return <ServiceRequestsClient initialRequests={requests} services={services} />
+  return <ServiceRequestsClient initialRequests={requests as any} services={services} />
 }
