@@ -12,7 +12,7 @@ export default async function RequestsPage() {
 
   const userId = (session.user as any).id
 
-  // Fetch service requests
+  // .Fetch service requests
   const requests = await prisma.serviceRequest.findMany({
     where: { userId },
     include: {
