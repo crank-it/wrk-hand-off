@@ -70,6 +70,12 @@ export const {
         (session.user as any).role = token.role
       }
       return session
+    },
+    redirect({ url, baseUrl }) {
+      // Always redirect to dashboard after successful sign in
+      if (url.startsWith('/dashboard')) return url
+      if (url === '/signin' || url === baseUrl + '/signin') return '/dashboard'
+      return '/dashboard'
     }
   },
   secret: process.env.NEXTAUTH_SECRET,
