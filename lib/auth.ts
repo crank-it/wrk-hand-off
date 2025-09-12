@@ -3,12 +3,7 @@ import Credentials from 'next-auth/providers/credentials'
 import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
 
-export const { 
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut
-} = NextAuth({
+const config = {
   providers: [
     Credentials({
       name: 'credentials',
@@ -50,27 +45,27 @@ export const {
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt' as const
   },
   pages: {
     signIn: '/signin',
   },
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user }: any) {
       if (user) {
         token.id = user.id
-        token.role = (user as any).role
+        token.role = user.role
       }
       return token
     },
-    session({ session, token }) {
+    session({ session, token }: any) {
       if (session?.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).role = token.role
+        session.user.id = token.id
+        session.user.role = token.role
       }
       return session
     },
-    redirect({ url, baseUrl }) {
+    redirect({ url, baseUrl }: any) {
       // Ensure proper redirect to dashboard after signin
       if (url.startsWith('/dashboard')) return url
       return '/dashboard'
@@ -78,4 +73,11 @@ export const {
   },
   secret: process.env.NEXTAUTH_SECRET,
   trustHost: true,
-})
+}
+
+export const { 
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut
+} = NextAuth(config)
