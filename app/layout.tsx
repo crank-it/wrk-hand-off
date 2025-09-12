@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import { ToasterProvider } from '../components/ToasterProvider'
+import AuthProvider from '../components/SessionProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,8 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToasterProvider />
-        <div className="min-h-screen flex flex-col">
+        <AuthProvider>
+          <ToasterProvider />
+          <div className="min-h-screen flex flex-col">
           {/* Navigation Header */}
           <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
             <div className="container mx-auto px-4">
@@ -148,7 +150,8 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-        </div>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   )
