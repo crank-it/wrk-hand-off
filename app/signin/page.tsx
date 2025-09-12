@@ -30,69 +30,24 @@ export default function SignInPage() {
 
     console.log('Attempting sign in with email:', email)
 
-    // First, verify credentials with our custom endpoint
     try {
-      console.log('Verifying credentials...')
-      
-      const verifyResponse = await fetch('/api/auth/custom-signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false
       })
 
-      const verifyData = await verifyResponse.json()
-
-      if (!verifyResponse.ok || verifyData.error) {
-        console.error('Credentials invalid:', verifyData.error)
+      if (result?.error) {
         setError('Invalid email or password')
         setLoading(false)
-        return
+      } else if (result?.ok) {
+        // Force a complete page reload to ensure the session is loaded
+        window.location.replace('/dashboard')
+      } else {
+        setError('Sign in failed. Please try again.')
+        setLoading(false)
       }
-
-      console.log('Credentials verified, attempting NextAuth sign-in...')
-
-      // Now try NextAuth sign-in
-      try {
-        const result = await signIn('credentials', {
-          email,
-          password,
-          redirect: false
-        })
-
-        console.log('Sign in result:', result)
-        
-        if (result?.ok) {
-          console.log('Sign in successful! Redirecting...')
-          window.location.href = '/dashboard'
-        } else {
-          throw new Error('NextAuth sign-in failed')
-        }
-      } catch (signInError: any) {
-        console.log('NextAuth failed, using form-based sign-in...')
-        
-        // Create a form and submit it to NextAuth
-        const form = document.createElement('form')
-        form.method = 'POST'
-        form.action = '/api/auth/callback/credentials'
-        
-        const emailInput = document.createElement('input')
-        emailInput.type = 'hidden'
-        emailInput.name = 'email'
-        emailInput.value = email
-        
-        const passwordInput = document.createElement('input')
-        passwordInput.type = 'hidden'
-        passwordInput.name = 'password'
-        passwordInput.value = password
-        
-        form.appendChild(emailInput)
-        form.appendChild(passwordInput)
-        document.body.appendChild(form)
-        form.submit()
-      }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Sign in error:', err)
       setError('An error occurred. Please try again.')
       setLoading(false)

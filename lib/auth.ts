@@ -69,6 +69,11 @@ export const {
         (session.user as any).role = token.role
       }
       return session
+    },
+    redirect({ url, baseUrl }) {
+      // Ensure proper redirect to dashboard after signin
+      if (url.startsWith('/dashboard')) return url
+      return '/dashboard'
     }
   },
   secret: process.env.NEXTAUTH_SECRET,

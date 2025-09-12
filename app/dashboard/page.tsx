@@ -6,9 +6,6 @@ import Link from 'next/link'
 export default async function DashboardPage() {
   const session = await auth()
   
-  // Debug: Log what we're getting
-  console.log('Dashboard page session check:', session)
-  
   if (!session?.user) {
     redirect('/signin')
   }
