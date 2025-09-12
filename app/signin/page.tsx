@@ -26,8 +26,7 @@ export default function SignInPage() {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false,
-        callbackUrl: '/dashboard'
+        redirect: false
       })
 
       console.log('Sign in result:', result)
