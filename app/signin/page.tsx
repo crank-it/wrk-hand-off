@@ -1,10 +1,53 @@
+'use client'
+
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 
-export default async function SignInPage() {
-  // Get CSRF token server-side
-  const csrfResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/csrf`).catch(() => null)
-  const csrfData = csrfResponse ? await csrfResponse.json() : null
-  const csrfToken = csrfData?.csrfToken || ''
+export default function SignInPage() {
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    try {
+      console.log('Attempting signin with NextAuth signIn...')
+      
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false, // Don't redirect automatically
+        callbackUrl: '/dashboard'
+      })
+
+      console.log('NextAuth signIn result:', result)
+
+      if (result?.error) {
+        console.log('Authentication failed:', result.error)
+        setError('Invalid email or password')
+        setLoading(false)
+      } else if (result?.ok) {
+        console.log('Authentication successful!')
+        // Force a hard redirect to refresh the session
+        window.location.href = '/dashboard'
+      } else {
+        console.log('Unexpected result:', result)
+        setError('An error occurred during sign in')
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error('Sign in error:', err)
+      setError('An error occurred. Please try again.')
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center py-12 px-4">
@@ -22,12 +65,15 @@ export default async function SignInPage() {
             <p className="mt-2 text-gray-600">Sign in to access your dashboard</p>
           </div>
 
-          {/* Simple Form - Direct submission to NextAuth */}
-          <form 
-            method="POST" 
-            action="/api/auth/callback/credentials"
-            className="space-y-4"
-          >
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email address
@@ -56,14 +102,12 @@ export default async function SignInPage() {
               />
             </div>
 
-            <input type="hidden" name="callbackUrl" value="/dashboard" />
-            <input type="hidden" name="csrfToken" value={csrfToken} />
-
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-shadow"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign in
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
 
