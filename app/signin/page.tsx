@@ -1,73 +1,10 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
 
-export default function SignInPage() {
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
-
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    console.log('Attempting signin with:', email)
-
-    try {
-      // Get CSRF token first
-      const csrfResponse = await fetch('/api/auth/csrf')
-      const { csrfToken } = await csrfResponse.json()
-      
-      console.log('Got CSRF token:', csrfToken)
-
-      // Create form data for NextAuth
-      const authFormData = new FormData()
-      authFormData.append('email', email)
-      authFormData.append('password', password)
-      authFormData.append('csrfToken', csrfToken)
-      authFormData.append('callbackUrl', '/dashboard')
-
-      console.log('Submitting to NextAuth...')
-
-      // Submit directly to NextAuth callback
-      const response = await fetch('/api/auth/callback/credentials', {
-        method: 'POST',
-        body: authFormData,
-        redirect: 'manual' // Don't follow redirects automatically
-      })
-
-      console.log('Response status:', response.status)
-      console.log('Response headers:', [...response.headers.entries()])
-
-      if (response.status === 302 || response.status === 200) {
-        // Check for redirect location
-        const location = response.headers.get('location')
-        console.log('Redirect location:', location)
-        
-        if (location && location.includes('/dashboard')) {
-          console.log('Redirecting to dashboard')
-          window.location.replace('/dashboard')
-        } else {
-          // Force redirect to dashboard
-          console.log('Force redirecting to dashboard')
-          window.location.replace('/dashboard')
-        }
-      } else {
-        console.log('Auth failed with status:', response.status)
-        setError('Invalid email or password')
-        setLoading(false)
-      }
-    } catch (err) {
-      console.error('Sign in error:', err)
-      setError('An error occurred. Please try again.')
-      setLoading(false)
-    }
-  }
+export default async function SignInPage() {
+  // Get CSRF token server-side
+  const csrfResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/csrf`).catch(() => null)
+  const csrfData = csrfResponse ? await csrfResponse.json() : null
+  const csrfToken = csrfData?.csrfToken || ''
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center py-12 px-4">
@@ -85,15 +22,12 @@ export default function SignInPage() {
             <p className="mt-2 text-gray-600">Sign in to access your dashboard</p>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Simple Form - Direct submission to NextAuth */}
+          <form 
+            method="POST" 
+            action="/api/auth/callback/credentials"
+            className="space-y-4"
+          >
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email address
@@ -122,22 +56,14 @@ export default function SignInPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
-                <span className="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-              <Link href="/forgot-password" className="text-sm text-orange-600 hover:text-orange-500">
-                Forgot password?
-              </Link>
-            </div>
+            <input type="hidden" name="callbackUrl" value="/dashboard" />
+            <input type="hidden" name="csrfToken" value={csrfToken} />
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-shadow"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              Sign in
             </button>
           </form>
 
