@@ -25,24 +25,10 @@ export default function SignInPage() {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false
+        redirectTo: '/dashboard'
       })
 
       console.log('Sign in result:', result)
-
-      if (result?.error) {
-        console.error('Sign in error:', result.error)
-        setError('Invalid email or password')
-        setLoading(false)
-      } else if (result?.ok) {
-        console.log('Sign in successful, redirecting to dashboard')
-        router.push('/dashboard')
-        router.refresh()
-      } else {
-        console.error('Unexpected result:', result)
-        setError('An unexpected error occurred')
-        setLoading(false)
-      }
     } catch (err) {
       console.error('Sign in exception:', err)
       setError('An error occurred. Please try again.')
