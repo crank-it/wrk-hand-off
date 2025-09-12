@@ -54,7 +54,6 @@ export const {
   },
   pages: {
     signIn: '/signin',
-    error: '/signin',
   },
   callbacks: {
     jwt({ token, user }) {

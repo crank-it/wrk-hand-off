@@ -2,6 +2,7 @@
 
 import { signIn } from '../../lib/auth'
 import { AuthError } from 'next-auth'
+import { redirect } from 'next/navigation'
 
 export async function signInAction(email: string, password: string) {
   try {
@@ -10,7 +11,8 @@ export async function signInAction(email: string, password: string) {
       password,
       redirectTo: '/dashboard',
     })
-    return { success: true }
+    // If we reach here, sign-in was successful
+    redirect('/dashboard')
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
