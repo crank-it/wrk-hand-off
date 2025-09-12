@@ -22,13 +22,32 @@ export default function SignInPage() {
     console.log('Attempting sign in with email:', email)
 
     try {
+      console.log('Starting sign in process...')
       const result = await signIn('credentials', {
         email,
         password,
-        redirectTo: '/dashboard'
+        redirect: false
       })
 
       console.log('Sign in result:', result)
+      
+      if (result?.error) {
+        console.error('Sign in error:', result.error)
+        setError('Invalid email or password')
+        setLoading(false)
+      } else if (result?.ok) {
+        console.log('Sign in successful! Checking session...')
+        
+        // Wait a moment for session to be established
+        setTimeout(() => {
+          console.log('Redirecting to dashboard...')
+          window.location.href = '/dashboard'
+        }, 100)
+      } else {
+        console.error('Unexpected result:', result)
+        setError('Sign in failed. Please try again.')
+        setLoading(false)
+      }
     } catch (err) {
       console.error('Sign in exception:', err)
       setError('An error occurred. Please try again.')

@@ -58,6 +58,7 @@ export const {
   },
   callbacks: {
     jwt({ token, user }) {
+      console.log('JWT callback - user:', user, 'token:', token)
       if (user) {
         token.id = user.id
         token.role = (user as any).role
@@ -65,6 +66,7 @@ export const {
       return token
     },
     session({ session, token }) {
+      console.log('Session callback - session:', session, 'token:', token)
       if (session?.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role
@@ -72,6 +74,7 @@ export const {
       return session
     },
     redirect({ url, baseUrl }) {
+      console.log('Redirect callback - url:', url, 'baseUrl:', baseUrl)
       // Always redirect to dashboard after successful sign in
       if (url.startsWith('/dashboard')) return url
       if (url === '/signin' || url === baseUrl + '/signin') return '/dashboard'
