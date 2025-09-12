@@ -1,14 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 
 export default function SignInPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  // Redirect if already signed in
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.push('/dashboard')
+    }
+  }, [session, status, router])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -23,10 +32,15 @@ export default function SignInPage() {
 
     try {
       console.log('Starting sign in process...')
+      
+      // Use a direct API call as a fallback if signIn fails
+      const baseUrl = window.location.origin
+      
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: false
+        redirect: false,
+        callbackUrl: `${baseUrl}/dashboard`
       })
 
       console.log('Sign in result:', result)
@@ -36,22 +50,53 @@ export default function SignInPage() {
         setError('Invalid email or password')
         setLoading(false)
       } else if (result?.ok) {
-        console.log('Sign in successful! Checking session...')
-        
-        // Wait a moment for session to be established
-        setTimeout(() => {
-          console.log('Redirecting to dashboard...')
-          window.location.href = '/dashboard'
-        }, 100)
+        console.log('Sign in successful! Redirecting...')
+        // Force a full page reload to ensure session is loaded
+        window.location.replace('/dashboard')
       } else {
         console.error('Unexpected result:', result)
         setError('Sign in failed. Please try again.')
         setLoading(false)
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Sign in exception:', err)
-      setError('An error occurred. Please try again.')
-      setLoading(false)
+      
+      // If the error is about URL construction, try a direct approach
+      if (err.message && err.message.includes('Invalid URL')) {
+        console.log('Attempting alternative sign-in method...')
+        
+        try {
+          // Direct API call to NextAuth
+          const response = await fetch('/api/auth/signin/credentials', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              email,
+              password,
+              json: 'true',
+            }),
+          })
+          
+          const data = await response.json()
+          
+          if (data.error) {
+            setError('Invalid email or password')
+            setLoading(false)
+          } else {
+            // Success - reload to dashboard
+            window.location.replace('/dashboard')
+          }
+        } catch (altErr) {
+          console.error('Alternative sign-in also failed:', altErr)
+          setError('An error occurred. Please try again.')
+          setLoading(false)
+        }
+      } else {
+        setError('An error occurred. Please try again.')
+        setLoading(false)
+      }
     }
   }
 
