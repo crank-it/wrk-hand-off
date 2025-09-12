@@ -7,7 +7,10 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { email, password } = body
 
+    console.log('Custom signin attempt:', { email, passwordLength: password?.length })
+
     if (!email || !password) {
+      console.log('Missing email or password')
       return NextResponse.json(
         { error: 'Email and password are required' },
         { status: 400 }
@@ -19,7 +22,14 @@ export async function POST(request: Request) {
       where: { email }
     })
 
+    console.log('User found:', { 
+      exists: !!user, 
+      hasPassword: !!user?.password,
+      passwordLength: user?.password?.length 
+    })
+
     if (!user || !user.password) {
+      console.log('User not found or no password in database')
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -27,17 +37,20 @@ export async function POST(request: Request) {
     }
 
     // Verify password
+    console.log('Comparing passwords...')
     const isPasswordValid = await bcrypt.compare(password, user.password)
+    console.log('Password valid:', isPasswordValid)
 
     if (!isPasswordValid) {
+      console.log('Password comparison failed')
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
       )
     }
 
+    console.log('Authentication successful!')
     // If we get here, credentials are valid
-    // Return success and let client handle the sign-in
     return NextResponse.json({
       success: true,
       user: {
