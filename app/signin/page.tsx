@@ -28,9 +28,6 @@ export default function SignInPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    console.log('Attempting sign in with email:', email)
-
-    // Bypass NextAuth client entirely - use form submission
     try {
       // Get CSRF token first
       const csrfResponse = await fetch('/api/auth/csrf')
@@ -42,25 +39,32 @@ export default function SignInPage() {
       authFormData.append('password', password)
       authFormData.append('csrfToken', csrfToken)
       authFormData.append('callbackUrl', '/dashboard')
+      authFormData.append('json', 'true')
 
-      // Submit directly to NextAuth - this will handle the redirect
-      const authForm = document.createElement('form')
-      authForm.method = 'POST'
-      authForm.action = '/api/auth/callback/credentials'
-      authForm.style.display = 'none'
-
-      // Add all form fields
-      authFormData.forEach((value, key) => {
-        const input = document.createElement('input')
-        input.type = 'hidden'
-        input.name = key
-        input.value = value.toString()
-        authForm.appendChild(input)
+      // Submit to NextAuth callback with fetch to avoid page reload
+      const response = await fetch('/api/auth/callback/credentials', {
+        method: 'POST',
+        body: authFormData,
       })
 
-      document.body.appendChild(authForm)
-      authForm.submit()
-
+      if (response.ok) {
+        // Check if authentication was successful
+        const result = await response.text()
+        
+        // If we get redirected to dashboard URL, navigate there
+        if (response.url && response.url.includes('/dashboard')) {
+          window.location.href = '/dashboard'
+        } else if (result.includes('dashboard') || response.status === 200) {
+          // Force navigation to dashboard
+          window.location.href = '/dashboard'
+        } else {
+          setError('Invalid email or password')
+          setLoading(false)
+        }
+      } else {
+        setError('Invalid email or password')
+        setLoading(false)
+      }
     } catch (err) {
       console.error('Sign in error:', err)
       setError('An error occurred. Please try again.')
