@@ -1,23 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 
 export default function SignInPage() {
-  const router = useRouter()
-  const { data: session, status } = useSession()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-
-  // Redirect if already signed in
-  useEffect(() => {
-    if (status === 'authenticated' && session) {
-      router.push('/dashboard')
-    }
-  }, [session, status, router])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -28,10 +16,14 @@ export default function SignInPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
+    console.log('Attempting signin with:', email)
+
     try {
       // Get CSRF token first
       const csrfResponse = await fetch('/api/auth/csrf')
       const { csrfToken } = await csrfResponse.json()
+      
+      console.log('Got CSRF token:', csrfToken)
 
       // Create form data for NextAuth
       const authFormData = new FormData()
@@ -39,29 +31,34 @@ export default function SignInPage() {
       authFormData.append('password', password)
       authFormData.append('csrfToken', csrfToken)
       authFormData.append('callbackUrl', '/dashboard')
-      authFormData.append('json', 'true')
 
-      // Submit to NextAuth callback with fetch to avoid page reload
+      console.log('Submitting to NextAuth...')
+
+      // Submit directly to NextAuth callback
       const response = await fetch('/api/auth/callback/credentials', {
         method: 'POST',
         body: authFormData,
+        redirect: 'manual' // Don't follow redirects automatically
       })
 
-      if (response.ok) {
-        // Check if authentication was successful
-        const result = await response.text()
+      console.log('Response status:', response.status)
+      console.log('Response headers:', [...response.headers.entries()])
+
+      if (response.status === 302 || response.status === 200) {
+        // Check for redirect location
+        const location = response.headers.get('location')
+        console.log('Redirect location:', location)
         
-        // If we get redirected to dashboard URL, navigate there
-        if (response.url && response.url.includes('/dashboard')) {
-          window.location.href = '/dashboard'
-        } else if (result.includes('dashboard') || response.status === 200) {
-          // Force navigation to dashboard
-          window.location.href = '/dashboard'
+        if (location && location.includes('/dashboard')) {
+          console.log('Redirecting to dashboard')
+          window.location.replace('/dashboard')
         } else {
-          setError('Invalid email or password')
-          setLoading(false)
+          // Force redirect to dashboard
+          console.log('Force redirecting to dashboard')
+          window.location.replace('/dashboard')
         }
       } else {
+        console.log('Auth failed with status:', response.status)
         setError('Invalid email or password')
         setLoading(false)
       }
