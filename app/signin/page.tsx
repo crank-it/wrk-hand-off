@@ -30,23 +30,37 @@ export default function SignInPage() {
 
     console.log('Attempting sign in with email:', email)
 
+    // Bypass NextAuth client entirely - use form submission
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false
+      // Get CSRF token first
+      const csrfResponse = await fetch('/api/auth/csrf')
+      const { csrfToken } = await csrfResponse.json()
+
+      // Create form data for NextAuth
+      const authFormData = new FormData()
+      authFormData.append('email', email)
+      authFormData.append('password', password)
+      authFormData.append('csrfToken', csrfToken)
+      authFormData.append('callbackUrl', '/dashboard')
+
+      // Submit directly to NextAuth - this will handle the redirect
+      const authForm = document.createElement('form')
+      authForm.method = 'POST'
+      authForm.action = '/api/auth/callback/credentials'
+      authForm.style.display = 'none'
+
+      // Add all form fields
+      authFormData.forEach((value, key) => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = key
+        input.value = value.toString()
+        authForm.appendChild(input)
       })
 
-      if (result?.error) {
-        setError('Invalid email or password')
-        setLoading(false)
-      } else if (result?.ok) {
-        // Force a complete page reload to ensure the session is loaded
-        window.location.replace('/dashboard')
-      } else {
-        setError('Sign in failed. Please try again.')
-        setLoading(false)
-      }
+      document.body.appendChild(authForm)
+      authForm.submit()
+
     } catch (err) {
       console.error('Sign in error:', err)
       setError('An error occurred. Please try again.')
