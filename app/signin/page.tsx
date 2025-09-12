@@ -30,73 +30,72 @@ export default function SignInPage() {
 
     console.log('Attempting sign in with email:', email)
 
+    // First, verify credentials with our custom endpoint
     try {
-      console.log('Starting sign in process...')
+      console.log('Verifying credentials...')
       
-      // Use a direct API call as a fallback if signIn fails
-      const baseUrl = window.location.origin
-      
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-        callbackUrl: `${baseUrl}/dashboard`
+      const verifyResponse = await fetch('/api/auth/custom-signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       })
 
-      console.log('Sign in result:', result)
-      
-      if (result?.error) {
-        console.error('Sign in error:', result.error)
+      const verifyData = await verifyResponse.json()
+
+      if (!verifyResponse.ok || verifyData.error) {
+        console.error('Credentials invalid:', verifyData.error)
         setError('Invalid email or password')
         setLoading(false)
-      } else if (result?.ok) {
-        console.log('Sign in successful! Redirecting...')
-        // Force a full page reload to ensure session is loaded
-        window.location.replace('/dashboard')
-      } else {
-        console.error('Unexpected result:', result)
-        setError('Sign in failed. Please try again.')
-        setLoading(false)
+        return
+      }
+
+      console.log('Credentials verified, attempting NextAuth sign-in...')
+
+      // Now try NextAuth sign-in
+      try {
+        const result = await signIn('credentials', {
+          email,
+          password,
+          redirect: false
+        })
+
+        console.log('Sign in result:', result)
+        
+        if (result?.ok) {
+          console.log('Sign in successful! Redirecting...')
+          window.location.href = '/dashboard'
+        } else {
+          throw new Error('NextAuth sign-in failed')
+        }
+      } catch (signInError: any) {
+        console.log('NextAuth failed, using form-based sign-in...')
+        
+        // Create a form and submit it to NextAuth
+        const form = document.createElement('form')
+        form.method = 'POST'
+        form.action = '/api/auth/callback/credentials'
+        
+        const emailInput = document.createElement('input')
+        emailInput.type = 'hidden'
+        emailInput.name = 'email'
+        emailInput.value = email
+        
+        const passwordInput = document.createElement('input')
+        passwordInput.type = 'hidden'
+        passwordInput.name = 'password'
+        passwordInput.value = password
+        
+        form.appendChild(emailInput)
+        form.appendChild(passwordInput)
+        document.body.appendChild(form)
+        form.submit()
       }
     } catch (err: any) {
-      console.error('Sign in exception:', err)
-      
-      // If the error is about URL construction, try a direct approach
-      if (err.message && err.message.includes('Invalid URL')) {
-        console.log('Attempting alternative sign-in method...')
-        
-        try {
-          // Direct API call to NextAuth
-          const response = await fetch('/api/auth/signin/credentials', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-              email,
-              password,
-              json: 'true',
-            }),
-          })
-          
-          const data = await response.json()
-          
-          if (data.error) {
-            setError('Invalid email or password')
-            setLoading(false)
-          } else {
-            // Success - reload to dashboard
-            window.location.replace('/dashboard')
-          }
-        } catch (altErr) {
-          console.error('Alternative sign-in also failed:', altErr)
-          setError('An error occurred. Please try again.')
-          setLoading(false)
-        }
-      } else {
-        setError('An error occurred. Please try again.')
-        setLoading(false)
-      }
+      console.error('Sign in error:', err)
+      setError('An error occurred. Please try again.')
+      setLoading(false)
     }
   }
 
