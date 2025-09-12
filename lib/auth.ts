@@ -99,4 +99,5 @@ export const {
   secret: process.env.NEXTAUTH_SECRET,
   debug: true, // Enable debug for now
   trustHost: true, // Add this for Vercel deployment
+  useSecureCookies: process.env.NODE_ENV === 'production',
 })
