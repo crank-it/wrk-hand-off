@@ -21,6 +21,7 @@ import { CSS } from '@dnd-kit/utilities'
 import toast from 'react-hot-toast'
 import { CreateTaskModal } from './CreateTaskModal'
 import { TaskDetailModal } from './TaskDetailModal'
+import { EmailCampaignModal } from './EmailCampaignModal'
 
 interface Task {
   id: string
@@ -53,6 +54,7 @@ export function KanbanBoard({ initialTasks, overdueTasks }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEmailCampaignModalOpen, setIsEmailCampaignModalOpen] = useState(false)
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   
@@ -160,12 +162,23 @@ export function KanbanBoard({ initialTasks, overdueTasks }: KanbanBoardProps) {
             Track and manage all your project tasks in one place
           </p>
         </div>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:shadow-lg transition-shadow"
-        >
-          Create Task
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:shadow-lg transition-shadow"
+          >
+            Create Task
+          </button>
+          <button
+            onClick={() => setIsEmailCampaignModalOpen(true)}
+            className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-medium hover:shadow-lg transition-shadow flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Create Email Campaign
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -279,12 +292,23 @@ export function KanbanBoard({ initialTasks, overdueTasks }: KanbanBoardProps) {
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
             <p className="text-gray-500 mb-4">Create your first task to get started!</p>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-lg"
-            >
-              Create Your First Task
-            </button>
+            <div className="flex gap-3 justify-center">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:shadow-lg"
+              >
+                Create Your First Task
+              </button>
+              <button
+                onClick={() => setIsEmailCampaignModalOpen(true)}
+                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-lg gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Create Email Campaign
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -305,6 +329,13 @@ export function KanbanBoard({ initialTasks, overdueTasks }: KanbanBoardProps) {
         }}
         task={selectedTask}
         onTaskUpdated={refreshTasks}
+      />
+
+      {/* Email Campaign Modal */}
+      <EmailCampaignModal
+        isOpen={isEmailCampaignModalOpen}
+        onClose={() => setIsEmailCampaignModalOpen(false)}
+        onCampaignCreated={refreshTasks}
       />
     </>
   )
